@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Playoff Scoring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .edit-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .team-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .team-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .team-total {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #4CAF50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .position-section {
+            margin-bottom: 15px;
+        }
+
+        .position-header {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 5px 10px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .position-count {
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.1);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .position-slots {
+            min-height: 60px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .position-slots.drag-over {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .position-slots.full {
+            background: rgba(200, 200, 200, 0.2);
+            border-color: #ccc;
+        }
+
+        .empty-position {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+
+        .player-item-small {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 6px;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .player-item-small:hover {
+            transform: translateX(3px);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+        }
+
+        .player-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .player-name-section {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .player-stats {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .player-team {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-left: 5px;
+        }
+
+        .player-score {
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .available-by-position {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .position-pool {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .position-pool h4 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .position-pool .players-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .player-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .player-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .player-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .player-score {
+            font-weight: bold;
+            float: right;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .available-players {
+            margin-top: 30px;
+        }
+
+        .available-players h3 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .players-pool {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(240, 240, 240, 0.5);
+            border-radius: 12px;
+        }
+
+        .add-team-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-team-form input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .remove-team-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .remove-team-btn:hover {
+            background: #d32f2f;
+            transform: scale(1.05);
+        }
+
+        .empty-roster {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 40px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .teams-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .players-pool {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Fantasy Playoff Scoring</h1>
+            <p>Drag and drop players to build your winning team!</p>
+        </div>
+
+        <div class="controls">
+            {% if edit_mode %}
+                <a href="/" class="btn btn-secondary">📊 View Scores</a>
+                <a href="/settings" class="btn btn-primary">⚙️ Settings</a>
+                <button onclick="refreshScores()" class="btn btn-primary">🔄 Refresh Scores</button>
+            {% else %}
+                <a href="/?edit=true" class="btn btn-primary">✏️ Edit Teams</a>
+                <a href="/settings" class="btn btn-secondary">⚙️ Settings</a>
+                <button onclick="refreshScores()" class="btn btn-secondary">🔄 Refresh Scores</button>
+            {% endif %}
+        </div>
+
+        <div class="main-content">
+            {% if edit_mode %}
+            <div class="edit-section">
+                <h3 style="text-align: center; color: #333; margin-bottom: 20px;">Team Management</h3>
+                <form class="add-team-form" action="/add_team" method="POST">
+                    <input type="text" name="team_name" placeholder="Enter team name..." required>
+                    <button type="submit" class="btn btn-primary">➕ Add Team</button>
+                </form>
+            </div>
+            {% endif %}
+
+            <div class="teams-grid">
+                {% for team_name, team_data in scores.items() %}
+                <div class="team-card">
+                    <div class="team-header">
+                        <div class="team-name">{{ team_name }}</div>
+                        <div class="team-total">{{ "%.1f"|format(team_data.total) }} pts</div>
+                        {% if edit_mode %}
+                        <form action="/remove_team" method="POST" style="display: inline;">
+                            <input type="hidden" name="team_name" value="{{ team_name }}">
+                            <button type="submit" class="remove-team-btn" onclick="return confirm('Remove {{ team_name }}?')">🗑️</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="roster" data-team="{{ team_name }}">
+                        {% for position, max_count in roster_positions.items() %}
+                        <div class="position-section">
+                            <div class="position-header">
+                                <span>{{ position }}</span>
+                                <span class="position-count">
+                                    {{ team_data.roster.get(position, [])|length }}/{{ max_count }}
+                                </span>
+                            </div>
+                            <div class="position-slots {% if team_data.roster.get(position, [])|length >= max_count %}full{% endif %}" 
+                                 data-team="{{ team_name }}" 
+                                 data-position="{{ position }}">
+                                
+                                {% set position_players = team_data.roster.get(position, []) %}
+                                {% if position_players %}
+                                {% for player in position_players %}
+                                    {% set player_name = player.name if player is mapping else player %}
+                                    {% set player_details = team_data.player_details.get(player_name, {}) %}
+                                    <div class="player-item-small" 
+                                         draggable="{% if edit_mode %}true{% else %}false{% endif %}" 
+                                         data-player="{{ player_name }}"
+                                         data-position="{{ position }}">
+                                        <div class="player-info">
+                                            <div class="player-name-section">
+                                                <div>
+                                                    {{ player_name }}
+                                                    {% if player is mapping and player.team %}
+                                                    <span class="player-team">({{ player.team }})</span>
+                                                    {% endif %}
+                                                </div>
+                                                {% if player_details %}
+                                                <div class="player-stats">
+                                                    {% if position == 'QB' %}
+                                                        {% if player_details.pass_yds %}{{ player_details.pass_yds }} pass yds{% endif %}
+                                                        {% if player_details.pass_tds %}, {{ player_details.pass_tds }} pass TD{% endif %}
+                                                        {% if player_details.ints %}, {{ player_details.ints }} INT{% endif %}
+                                                    {% elif position == 'RB' %}
+                                                        {% if player_details.rush_yds %}{{ player_details.rush_yds }} rush yds{% endif %}
+                                                        {% if player_details.rush_tds %}, {{ player_details.rush_tds }} rush TD{% endif %}
+                                                        {% if player_details.rec %}{{ player_details.rec }} rec{% endif %}
+                                                        {% if player_details.rec_yds %}, {{ player_details.rec_yds }} rec yds{% endif %}
+                                                    {% elif position in ['WR', 'TE'] %}
+                                                        {% if player_details.rec %}{{ player_details.rec }} rec{% endif %}
+                                                        {% if player_details.rec_yds %}, {{ player_details.rec_yds }} yds{% endif %}
+                                                        {% if player_details.rec_tds %}, {{ player_details.rec_tds }} TD{% endif %}
+                                                    {% endif %}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <span class="player-score">{{ "%.1f"|format(team_data.player_scores.get(player_name, 0)) }} pts</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="empty-position">
+                                        {% if edit_mode %}
+                                            Drag {{ position }} here
+                                        {% else %}
+                                            No {{ position }} selected
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% if edit_mode and not scores %}
+                <div class="team-card">
+                    <div class="empty-roster">
+                        <h3>No teams created yet</h3>
+                        <p>Use the form above to add your first team!</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if edit_mode and available_players %}
+            <div class="available-players">
+                <h3>🎯 Available Players</h3>
+                <div class="available-by-position">
+                    {% for position, players in available_players.items() %}
+                    {% if players %}
+                    <div class="position-pool">
+                        <h4>{{ position }}</h4>
+                        <div class="players-list">
+                            {% for player in players %}
+                            <div class="player-item-small" 
+                                 draggable="true" 
+                                 data-player="{{ player.name }}"
+                                 data-position="{{ position }}"
+                                 data-player-data="{{ player|tojson|e }}">
+                                <div class="player-info">
+                                    <div class="player-name-section">
+                                        {{ player.name }}
+                                        {% if player.team %}
+                                        <span class="player-team">({{ player.team }})</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Drag and Drop Functionality
+        let draggedPlayer = null;
+        let draggedPosition = null;
+        let draggedPlayerData = null;
+        let sourceTeam = null;
+
+        // Add event listeners for drag and drop
+        document.addEventListener('DOMContentLoaded', function() {
+            setupDragAndDrop();
+        });
+
+        function setupDragAndDrop() {
+            const playerItems = document.querySelectorAll('.player-item-small[draggable="true"]');
+            const positionSlots = document.querySelectorAll('.position-slots');
+
+            playerItems.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+
+            positionSlots.forEach(slot => {
+                slot.addEventListener('dragover', handleDragOver);
+                slot.addEventListener('drop', handleDrop);
+                slot.addEventListener('dragenter', handleDragEnter);
+                slot.addEventListener('dragleave', handleDragLeave);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedPlayer = this.dataset.player;
+            draggedPosition = this.dataset.position;
+            sourceTeam = this.closest('.roster')?.dataset.team || null;
+            
+            // Get player data if available
+            const playerDataAttr = this.dataset.playerData;
+            if (playerDataAttr) {
+                try {
+                    draggedPlayerData = JSON.parse(playerDataAttr);
+                } catch (e) {
+                    draggedPlayerData = {
+                        name: draggedPlayer,
+                        team: '',
+                        position: draggedPosition
+                    };
+                }
+            } else {
+                draggedPlayerData = {
+                    name: draggedPlayer,
+                    team: '',
+                    position: draggedPosition
+                };
+            }
+            
+            this.classList.add('dragging');
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            draggedPlayer = null;
+            draggedPosition = null;
+            draggedPlayerData = null;
+            sourceTeam = null;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            const targetTeam = this.dataset.team;
+            const targetPosition = this.dataset.position;
+            
+            if (!draggedPlayer || !targetTeam || !targetPosition || !draggedPlayerData) return;
+            
+            // Check if position matches (or if it's flexible)
+            const allowedPositions = [targetPosition];
+            if (targetPosition === 'TE') {
+                allowedPositions.push('RB', 'WR'); // TE spot can be flex
+            }
+            
+            if (!allowedPositions.includes(draggedPosition)) {
+                alert(`Cannot place ${draggedPosition} in ${targetPosition} slot`);
+                return;
+            }
+            
+            // Don't do anything if dropping on the same team/position
+            if (sourceTeam === targetTeam && draggedPosition === targetPosition) return;
+
+            // Check if position is full
+            const currentPlayers = this.querySelectorAll('.player-item-small').length;
+            const maxPlayers = parseInt(this.closest('.position-section').querySelector('.position-count').textContent.split('/')[1]);
+            
+            if (currentPlayers >= maxPlayers && (!sourceTeam || sourceTeam !== targetTeam)) {
+                alert(`${targetPosition} position is full`);
+                return;
+            }
+
+            // Remove player from source team (if any)
+            if (sourceTeam) {
+                removePlayerFromTeam(sourceTeam, draggedPlayer, draggedPosition);
+            }
+            
+            // Add player to target team
+            addPlayerToTeam(targetTeam, draggedPlayerData, targetPosition);
+        }
+
+        function addPlayerToTeam(teamName, playerData, position) {
+            fetch('/add_player', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    team_name: teamName,
+                    player_data: playerData,
+                    position: position
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.error || 'Error adding player');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error adding player');
+            });
+        }
+
+        function removePlayerFromTeam(teamName, playerName, position) {
+            fetch('/remove_player', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    team_name: teamName,
+                    player_name: playerName,
+                    position: position
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    console.error('Error removing player:', data.error);
+                }
+            });
+        }
+
+        function refreshScores() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>

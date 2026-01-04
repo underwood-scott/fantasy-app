@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Playoff Scoring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+            border-radius: 16px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .auto-refresh-indicator {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .teams-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .team-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .team-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .team-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .team-total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .roster-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .roster-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .position-section {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .position-header {
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 12px;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .position-slots {
+            min-height: 60px;
+            border-radius: 6px;
+            border: 2px dashed #cbd5e1;
+            padding: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .position-slots.drag-over {
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .player-card {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .player-card:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        .player-card.dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+        }
+
+        .player-name {
+            font-weight: 500;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .player-team {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .player-score {
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .player-stats {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .available-players {
+            margin-top: 24px;
+        }
+
+        .available-header {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .position-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .position-tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .position-tab.active {
+            background: white;
+            color: #3b82f6;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .available-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .available-player {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: grab;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .available-player:hover {
+            background: #f8fafc;
+        }
+
+        .available-player:active {
+            cursor: grabbing;
+        }
+
+        .available-player:last-child {
+            border-bottom: none;
+        }
+
+        .team-management {
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .add-team-form {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .add-team-form input[type="text"] {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .color-picker-container {
+            position: relative;
+            width: 40px;
+            height: 36px;
+        }
+
+        .color-picker-container input[type="color"] {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #d1d5db;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .color-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+        }
+
+        .drag-over {
+            background: #dbeafe !important;
+            border-color: #3b82f6 !important;
+        }
+
+        .add-team-form button {
+            padding: 8px 16px;
+            background: #059669;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .add-team-form button:hover {
+            background: #047857;
+        }
+
+        .remove-team-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: background 0.2s ease;
+        }
+
+        .remove-team-btn:hover {
+            background: #dc2626;
+        }
+
+        .remove-player-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+            user-select: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+        }
+
+        .remove-button-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 26px;
+            height: 26px;
+            z-index: 10;
+            pointer-events: auto;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+        }
+
+        .remove-player-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        .remove-player-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .remove-player-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+            padding: 40px 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px dashed #d1d5db;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .roster-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .position-tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Fantasy Playoff Scoring</h1>
+            <p>Build your championship roster with drag-and-drop ease</p>
+        </div>
+
+        <div class="controls">
+            {% if edit_mode %}
+                <a href="/" class="btn btn-secondary">📊 View Scores</a>
+                <a href="/settings" class="btn btn-primary">⚙️ Settings</a>
+            {% else %}
+                <a href="/?edit=true" class="btn btn-primary">✏️ Edit Teams</a>
+                <a href="/settings" class="btn btn-secondary">⚙️ Settings</a>
+                <span class="auto-refresh-indicator">🔄 Auto-refreshing every minute</span>
+            {% endif %}
+        </div>
+
+        <div class="main-content">
+            <div class="teams-section">
+                {% if edit_mode %}
+                <div class="team-management">
+                    <form class="add-team-form" method="POST" action="/add_team">
+                        <input type="text" name="team_name" placeholder="Enter team name..." required>
+                        <div class="color-picker-container">
+                            <input type="color" name="team_color" value="#3b82f6" title="Choose team color" onchange="updateColorPreview(this)">
+                            <div class="color-preview">
+                                <div class="color-circle" style="background-color: #3b82f6;"></div>
+                            </div>
+                        </div>
+                        <button type="submit">Add Team</button>
+                    </form>
+                </div>
+                {% endif %}
+
+                {% if scores %}
+                    {% for team_name, team_data in scores.items() %}
+                    <div class="team-card" data-team="{{ team_name }}" style="background: linear-gradient(135deg, {{ team_data.team_color }}15 0%, {{ team_data.team_color }}25 100%); border-left: 4px solid {{ team_data.team_color }};">
+                        <div class="team-header">
+                            <span class="team-name">{{ team_name }}</span>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <span class="team-total">{{ "%.1f"|format(team_data.total) }}</span>
+                                {% if edit_mode %}
+                                <form method="POST" action="/remove_team" style="margin: 0;">
+                                    <input type="hidden" name="team_name" value="{{ team_name }}">
+                                    <button type="submit" class="remove-team-btn" onclick="return confirm('Remove {{ team_name }}?')">×</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="roster-grid">
+                            {% for position, max_count in roster_positions.items() %}
+                            <div class="position-section">
+                                <div class="position-header">
+                                    {{ position }} ({{ team_data.roster[position]|length }}/{{ max_count }})
+                                </div>
+                                <div class="position-slots" 
+                                     data-team="{{ team_name }}" 
+                                     data-position="{{ position }}"
+                                     ondrop="dropPlayer(event)" 
+                                     ondragover="allowDrop(event)"
+                                     ondragenter="dragEnter(event)"
+                                     ondragleave="dragLeave(event)">
+                                    
+                                    {% for player in team_data.roster[position] %}
+                                        {% set player_name = player.name if player is mapping else player %}
+                                        {% set player_score = team_data.player_scores[player_name] %}
+                                        {% set player_details = team_data.player_details[player_name] %}
+                                        {% set player_team_color = player.team_color if (player is mapping and player.team_color and player.team_color != 'undefined') else '#64748b' %}
+                                        <div class="player-card" 
+                                             draggable="true" 
+                                             ondragstart="dragStart(event)"
+                                             data-player-name="{{ player_name }}"
+                                             data-position="{{ position }}"
+                                             data-team="{{ team_name }}"
+                                             style="background: linear-gradient(135deg, {{ player_team_color }}20 0%, {{ player_team_color }}35 100%); border-left: 3px solid {{ player_team_color }};">
+                                            <div class="player-name">{{ player_name }}</div>
+                                            <div class="player-team">{{ player.team if player is mapping else 'N/A' }}</div>
+                                            {% if not edit_mode %}
+                                            <div class="player-score">{{ "%.1f"|format(player_score) }} pts</div>
+                                            {% if player_details %}
+                                            <div class="player-stats">
+                                                {% for stat, value in player_details.items() %}
+                                                    {{ stat }}: {{ value }}{% if not loop.last %} | {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                            {% endif %}
+                                            {% if edit_mode %}
+                                            <form method="POST" action="/remove_player_form" style="position: absolute; top: 2px; right: 2px; margin: 0; padding: 0;">
+                                                <input type="hidden" name="team_name" value="{{ team_name }}">
+                                                <input type="hidden" name="player_name" value="{{ player_name }}">
+                                                <input type="hidden" name="position" value="{{ position }}">
+                                                <button type="submit" 
+                                                        style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1000; user-select: none;"
+                                                        onclick="return confirm('Remove {{ player_name }} from {{ team_name }}?')"
+                                                        title="Remove {{ player_name }}">×</button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                    
+                                    {% if team_data.roster[position]|length == 0 %}
+                                        <div style="color: #9ca3af; font-size: 0.875rem; text-align: center; padding: 16px;">
+                                            {% if edit_mode %}
+                                                Drag players here
+                                            {% else %}
+                                                No players
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <p>{% if edit_mode %}Add your first team to get started!{% else %}No teams created yet.{% endif %}</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if edit_mode %}
+            <div class="sidebar">
+                <div class="available-players">
+                    <div class="available-header">
+                        <span>🏈</span>
+                        Available Players
+                    </div>
+                    
+                    <div class="position-tabs">
+                        {% for position in roster_positions.keys() %}
+                        <button class="position-tab {% if loop.first %}active{% endif %}" 
+                                onclick="showPosition('{{ position }}')">{{ position }}</button>
+                        {% endfor %}
+                    </div>
+                    
+                    {% for position, players in available_players.items() %}
+                    <div class="available-list" id="players-{{ position }}" style="{% if not loop.first %}display: none;{% endif %}">
+                        {% for player in players %}
+                        {% set player_team_color = player.team_color if (player.team_color and player.team_color != 'undefined' and player.team_color != '#000000') else '#64748b' %}
+                        <div class="available-player" 
+                             draggable="true" 
+                             ondragstart="dragStart(event)"
+                             data-player='{{ player|tojson }}'
+                             data-position="{{ position }}"
+                             style="background: linear-gradient(135deg, {{ player_team_color }}20 0%, {{ player_team_color }}35 100%); border-left: 3px solid {{ player_team_color }};">
+                            <div>
+                                <div style="font-weight: 500;">{{ player.name }}</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">{{ player.team }}</div>
+                            </div>
+                            <div style="color: #6b7280; font-size: 0.75rem;">{{ position }}</div>
+                        </div>
+                        {% endfor %}
+                        
+                        {% if players|length == 0 %}
+                        <div style="padding: 20px; text-align: center; color: #9ca3af;">
+                            No available {{ position }} players
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        let draggedElement = null;
+        let draggedPlayerData = null;
+        let draggedFromTeam = null;
+        let draggedFromPosition = null;
+
+        function dragStart(event) {
+            // Check if the drag started from a remove button or its container
+            if (event.target.closest('.remove-button-container') || 
+                event.target.classList.contains('remove-player-btn') ||
+                event.target.closest('.remove-player-btn')) {
+                event.preventDefault();
+                return false;
+            }
+            
+            draggedElement = event.currentTarget;
+            draggedElement.classList.add('dragging');
+            
+            // Check if this is from available players (has data-player attribute) or roster
+            const playerDataAttr = draggedElement.getAttribute('data-player');
+            if (playerDataAttr) {
+                // From available players
+                draggedPlayerData = JSON.parse(playerDataAttr);
+                draggedFromTeam = null;
+                draggedFromPosition = null;
+            } else {
+                // From roster - construct player data
+                const playerName = draggedElement.getAttribute('data-player-name');
+                const position = draggedElement.getAttribute('data-position');
+                const team = draggedElement.getAttribute('data-team');
+                const teamElement = draggedElement.querySelector('.player-team');
+                const playerTeam = teamElement ? teamElement.textContent.trim() : 'N/A';
+                
+                draggedPlayerData = {
+                    name: playerName,
+                    position: position,
+                    team: playerTeam
+                };
+                draggedFromTeam = team;
+                draggedFromPosition = position;
+            }
+            
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', '');
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function dragEnter(event) {
+            event.preventDefault();
+            // Find the position-slots container
+            let target = event.target;
+            while (target && !target.classList.contains('position-slots')) {
+                target = target.parentElement;
+                if (!target || target === document.body) break;
+            }
+            
+            if (target && target.classList.contains('position-slots')) {
+                target.classList.add('drag-over');
+            }
+        }
+
+        function dragLeave(event) {
+            // Only remove drag-over if we're actually leaving the position-slots area
+            let target = event.target;
+            while (target && !target.classList.contains('position-slots')) {
+                target = target.parentElement;
+                if (!target || target === document.body) break;
+            }
+            
+            if (target && target.classList.contains('position-slots')) {
+                // Check if the mouse is still within the bounds
+                const rect = target.getBoundingClientRect();
+                const x = event.clientX;
+                const y = event.clientY;
+                
+                if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+                    target.classList.remove('drag-over');
+                }
+            }
+        }
+
+        function dropPlayer(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Find the actual position-slots container
+            let dropTarget = event.target;
+            while (dropTarget && !dropTarget.classList.contains('position-slots')) {
+                dropTarget = dropTarget.parentElement;
+                if (!dropTarget || dropTarget === document.body) {
+                    console.log('No valid drop target found');
+                    return;
+                }
+            }
+            
+            dropTarget.classList.remove('drag-over');
+            
+            if (!draggedElement || !draggedPlayerData) {
+                console.log('No dragged data available');
+                return;
+            }
+            
+            const targetTeam = dropTarget.getAttribute('data-team');
+            const targetPosition = dropTarget.getAttribute('data-position');
+            
+            console.log(`Dropping ${draggedPlayerData.name} onto ${targetTeam} ${targetPosition}`);
+            
+            // Check if player can be added to this position
+            const playerPosition = draggedPlayerData.position;
+            
+            // Allow flex positioning (TE can accept RB/WR and vice versa)
+            const validDrop = playerPosition === targetPosition || 
+                (targetPosition === 'TE' && ['RB', 'WR', 'TE'].includes(playerPosition)) ||
+                (['RB', 'WR'].includes(targetPosition) && playerPosition === 'TE');
+            
+            if (!validDrop) {
+                alert(`Cannot add ${playerPosition} to ${targetPosition} slot`);
+                return;
+            }
+            
+            // If dragging from roster, remove from old position first
+            if (draggedFromTeam) {
+                removePlayer(draggedFromTeam, draggedPlayerData.name, draggedFromPosition, false);
+            }
+            
+            // Add to new position
+            fetch('/add_player', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    team_name: targetTeam,
+                    player_data: draggedPlayerData,
+                    position: targetPosition
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.error || 'Failed to add player');
+                    location.reload(); // Reload to reset UI state
+                }
+            })
+            .catch(error => {
+                console.error('Error adding player:', error);
+                alert('Network error occurred');
+                location.reload();
+            });
+        }
+
+        document.addEventListener('dragend', function() {
+            if (draggedElement) {
+                draggedElement.classList.remove('dragging');
+            }
+            // Remove drag-over class from all elements
+            document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+            draggedElement = null;
+            draggedPlayerData = null;
+            draggedFromTeam = null;
+            draggedFromPosition = null;
+        });
+
+        function updateColorPreview(input) {
+            const colorCircle = input.parentElement.querySelector('.color-circle');
+            if (colorCircle) {
+                colorCircle.style.backgroundColor = input.value;
+            }
+        }
+
+        function removePlayerSimple(teamName, playerName, position) {
+            try {
+                console.log('removePlayerSimple called with:', teamName, playerName, position);
+                alert('Remove button clicked! Team: ' + teamName + ', Player: ' + playerName);
+                
+                if (confirm(`Remove ${playerName} from ${teamName}?`)) {
+                    console.log('User confirmed removal, making request...');
+                    
+                    fetch('/remove_player', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            team_name: teamName,
+                            player_name: playerName,
+                            position: position
+                        })
+                    })
+                    .then(response => {
+                        console.log('Response received:', response.status);
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Response data:', data);
+                        if (data.success) {
+                            alert('Player removed successfully!');
+                            location.reload();
+                        } else {
+                            alert('Failed to remove player: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error removing player: ' + error.message);
+                    });
+                } else {
+                    console.log('User cancelled removal');
+                }
+            } catch (e) {
+                console.error('Exception in removePlayerSimple:', e);
+                alert('JavaScript error: ' + e.message);
+            }
+        }
+
+        function removePlayer(teamName, playerName, position, reload = true) {
+            console.log('removePlayer function called!');
+            console.log(`Removing player: ${playerName} from ${teamName} ${position}`);
+            
+            // Add visual feedback
+            if (confirm(`Remove ${playerName} from ${teamName}?`)) {
+                fetch('/remove_player', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        team_name: teamName,
+                        player_name: playerName,
+                        position: position
+                    })
+                })
+                .then(response => {
+                    console.log('Response received:', response);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Remove player response:', data);
+                    if (data.success) {
+                        if (reload) {
+                            location.reload();
+                        }
+                    } else {
+                        alert(data.error || 'Failed to remove player');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error removing player:', error);
+                    alert('Network error occurred while removing player');
+                });
+            }
+        }
+
+        function showPosition(position) {
+            // Hide all position lists
+            document.querySelectorAll('.available-list').forEach(list => {
+                list.style.display = 'none';
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.position-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected position and activate tab
+            document.getElementById('players-' + position).style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        function refreshScores() {
+            location.reload();
+        }
+
+        // Auto-refresh scores every minute when not in edit mode
+        {% if not edit_mode %}
+        setInterval(() => {
+            if (!document.hidden) {
+                refreshScores();
+            }
+        }, 60000); // 60 seconds = 1 minute
+        {% endif %}
+
+        // Refresh scores when page becomes visible again
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && !{{ edit_mode | lower }}) {
+                refreshScores();
+            }
+        });
+    </script>
+</body>
+</html>

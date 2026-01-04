@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Playoff Scoring - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .team-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .team-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .team-total {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #4CAF50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .roster {
+            min-height: 120px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .player-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .player-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .player-score {
+            font-weight: bold;
+            float: right;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Fantasy Playoff Scoring</h1>
+            <p>Your teams and their current scores!</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary">✏️ Edit Teams</button>
+            <button class="btn btn-secondary">🔄 Refresh Scores</button>
+        </div>
+
+        <div class="teams-grid">
+            <div class="team-card">
+                <div class="team-header">
+                    <div class="team-name">Scott's Team</div>
+                    <div class="team-total">0.0 pts</div>
+                </div>
+                
+                <div class="roster">
+                    <div class="player-item">
+                        Josh Allen
+                        <span class="player-score">0.0 pts</span>
+                    </div>
+                    <div class="player-item">
+                        Christian McCaffrey
+                        <span class="player-score">0.0 pts</span>
+                    </div>
+                    <div class="player-item">
+                        Tyreek Hill
+                        <span class="player-score">0.0 pts</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <div class="team-header">
+                    <div class="team-name">John's Team</div>
+                    <div class="team-total">0.0 pts</div>
+                </div>
+                
+                <div class="roster">
+                    <div class="player-item">
+                        Patrick Mahomes
+                        <span class="player-score">0.0 pts</span>
+                    </div>
+                    <div class="player-item">
+                        Derrick Henry
+                        <span class="player-score">0.0 pts</span>
+                    </div>
+                    <div class="player-item">
+                        Stefon Diggs
+                        <span class="player-score">0.0 pts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

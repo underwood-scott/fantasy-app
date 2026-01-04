@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Playoff Scoring - Settings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .settings-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .scoring-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .scoring-section {
+            background: rgba(240, 240, 240, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .scoring-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border: 2px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+            border: 2px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .alert-info {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196F3;
+            border: 2px solid rgba(33, 150, 243, 0.3);
+        }
+
+        .description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .scoring-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ Scoring Settings</h1>
+            <p>Customize your fantasy football scoring system</p>
+        </div>
+
+        <div class="controls">
+            <a href="/" class="btn btn-secondary">🏠 Back to Scores</a>
+            <a href="/?edit=true" class="btn btn-primary">✏️ Edit Teams</a>
+        </div>
+
+        {% if request.args.get('success') %}
+        <div class="alert alert-success">
+            ✅ Scoring settings updated successfully!
+        </div>
+        {% endif %}
+
+        {% if request.args.get('error') %}
+        <div class="alert alert-error">
+            ❌ Error updating settings. Please check your values and try again.
+        </div>
+        {% endif %}
+
+        {% if request.args.get('reset') %}
+        <div class="alert alert-info">
+            🔄 Scoring settings reset to defaults.
+        </div>
+        {% endif %}
+
+        <div class="settings-card">
+            <form method="POST" action="/update_scoring">
+                <div class="description">
+                    Adjust the point values for different statistical achievements. 
+                    Positive values award points, negative values deduct points.
+                </div>
+
+                <div class="scoring-grid">
+                    <div class="scoring-section">
+                        <h3>🏈 Quarterback (QB)</h3>
+                        <div class="form-group">
+                            <label for="pass_td">Passing Touchdown</label>
+                            <input type="number" step="0.1" id="pass_td" name="pass_td" 
+                                   value="{{ scoring.pass_td }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pass_yds">Passing Yards (per yard)</label>
+                            <input type="number" step="0.01" id="pass_yds" name="pass_yds" 
+                                   value="{{ scoring.pass_yds }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="interception">Interception Thrown</label>
+                            <input type="number" step="0.1" id="interception" name="interception" 
+                                   value="{{ scoring.interception }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fumble">Fumble Lost</label>
+                            <input type="number" step="0.1" id="fumble" name="fumble" 
+                                   value="{{ scoring.fumble }}" required>
+                        </div>
+                    </div>
+
+                    <div class="scoring-section">
+                        <h3>🏃‍♂️ RB/WR/TE (Flex)</h3>
+                        <div class="form-group">
+                            <label for="rush_td">Rushing Touchdown</label>
+                            <input type="number" step="0.1" id="rush_td" name="rush_td" 
+                                   value="{{ scoring.rush_td }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rush_yds">Rushing Yards (per yard)</label>
+                            <input type="number" step="0.01" id="rush_yds" name="rush_yds" 
+                                   value="{{ scoring.rush_yds }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rec_td">Receiving Touchdown</label>
+                            <input type="number" step="0.1" id="rec_td" name="rec_td" 
+                                   value="{{ scoring.rec_td }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rec_yds">Receiving Yards (per yard)</label>
+                            <input type="number" step="0.01" id="rec_yds" name="rec_yds" 
+                                   value="{{ scoring.rec_yds }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="receptions">Points Per Reception (PPR)</label>
+                            <input type="number" step="0.1" id="receptions" name="receptions" 
+                                   value="{{ scoring.receptions }}" required>
+                        </div>
+                    </div>
+
+                    <div class="scoring-section">
+                        <h3>🦵 Kicker (K)</h3>
+                        <div class="form-group">
+                            <label for="fg_0_39">Field Goal (0-39 yds)</label>
+                            <input type="number" step="0.1" id="fg_0_39" name="fg_0_39" 
+                                   value="{{ scoring.fg_0_39 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fg_40_49">Field Goal (40-49 yds)</label>
+                            <input type="number" step="0.1" id="fg_40_49" name="fg_40_49" 
+                                   value="{{ scoring.fg_40_49 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fg_50_plus">Field Goal (50+ yds)</label>
+                            <input type="number" step="0.1" id="fg_50_plus" name="fg_50_plus" 
+                                   value="{{ scoring.fg_50_plus }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="extra_point">Extra Point Made</label>
+                            <input type="number" step="0.1" id="extra_point" name="extra_point" 
+                                   value="{{ scoring.extra_point }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fg_miss">Field Goal Missed</label>
+                            <input type="number" step="0.1" id="fg_miss" name="fg_miss" 
+                                   value="{{ scoring.fg_miss }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="extra_miss">Extra Point Missed</label>
+                            <input type="number" step="0.1" id="extra_miss" name="extra_miss" 
+                                   value="{{ scoring.extra_miss }}" required>
+                        </div>
+                    </div>
+
+                    <div class="scoring-section">
+                        <h3>🛡️ Defense/Special Teams (DST)</h3>
+                        <div class="form-group">
+                            <label for="dst_td">Defensive/ST Touchdown</label>
+                            <input type="number" step="0.1" id="dst_td" name="dst_td" 
+                                   value="{{ scoring.dst_td }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_safety">Safety</label>
+                            <input type="number" step="0.1" id="dst_safety" name="dst_safety" 
+                                   value="{{ scoring.dst_safety }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_interception">Interception</label>
+                            <input type="number" step="0.1" id="dst_interception" name="dst_interception" 
+                                   value="{{ scoring.dst_interception }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_fumble_rec">Fumble Recovery</label>
+                            <input type="number" step="0.1" id="dst_fumble_rec" name="dst_fumble_rec" 
+                                   value="{{ scoring.dst_fumble_rec }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_sack">Sack</label>
+                            <input type="number" step="0.1" id="dst_sack" name="dst_sack" 
+                                   value="{{ scoring.dst_sack }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_block">Blocked Kick</label>
+                            <input type="number" step="0.1" id="dst_block" name="dst_block" 
+                                   value="{{ scoring.dst_block }}" required>
+                        </div>
+                        
+                        <h4 style="margin-top: 20px; margin-bottom: 10px; color: #374151;">Points Allowed</h4>
+                        <div class="form-group">
+                            <label for="dst_pts_0">0 Points Allowed</label>
+                            <input type="number" step="0.1" id="dst_pts_0" name="dst_pts_0" 
+                                   value="{{ scoring.dst_pts_0 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_pts_1_6">1-6 Points Allowed</label>
+                            <input type="number" step="0.1" id="dst_pts_1_6" name="dst_pts_1_6" 
+                                   value="{{ scoring.dst_pts_1_6 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_pts_7_13">7-13 Points Allowed</label>
+                            <input type="number" step="0.1" id="dst_pts_7_13" name="dst_pts_7_13" 
+                                   value="{{ scoring.dst_pts_7_13 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_pts_14_20">14-20 Points Allowed</label>
+                            <input type="number" step="0.1" id="dst_pts_14_20" name="dst_pts_14_20" 
+                                   value="{{ scoring.dst_pts_14_20 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_pts_21_27">21-27 Points Allowed</label>
+                            <input type="number" step="0.1" id="dst_pts_21_27" name="dst_pts_21_27" 
+                                   value="{{ scoring.dst_pts_21_27 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_pts_28_34">28-34 Points Allowed</label>
+                            <input type="number" step="0.1" id="dst_pts_28_34" name="dst_pts_28_34" 
+                                   value="{{ scoring.dst_pts_28_34 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst_pts_35_plus">35+ Points Allowed</label>
+                            <input type="number" step="0.1" id="dst_pts_35_plus" name="dst_pts_35_plus" 
+                                   value="{{ scoring.dst_pts_35_plus }}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Settings</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetToDefaults()">
+                        🔄 Reset to Defaults
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="settings-card">
+            <h3 style="text-align: center; color: #333; margin-bottom: 15px;">📊 Current vs Default Settings</h3>
+            <div class="description">
+                Compare your current settings with the default values:
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
+                {% for key, current_val in scoring.items() %}
+                {% set default_val = default_scoring[key] %}
+                <div style="padding: 10px; background: {% if current_val != default_val %}rgba(255, 193, 7, 0.1){% else %}rgba(76, 175, 80, 0.1){% endif %}; border-radius: 8px;">
+                    <div style="font-weight: bold; text-transform: capitalize;">{{ key.replace('_', ' ') }}</div>
+                    <div style="color: #666; font-size: 0.9rem;">
+                        Current: {{ current_val }} | Default: {{ default_val }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function resetToDefaults() {
+            if (confirm('Are you sure you want to reset all scoring settings to defaults?')) {
+                // Create a form to submit the reset request
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/reset_scoring';
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+</html>
