@@ -39,42 +39,184 @@ teams = {}
 
 # Initialize sample teams if none exist
 if not teams:
-    teams["Scott's Team"] = {
+    teams["Tommy"] = {
         'roster': {
-            'QB': [{'name': 'Baker Mayfield', 'team': 'TB', 'position': 'QB', 'team_color': '#d50a0a'}],
-            'RB': [
-                {'name': 'Bucky Irving', 'team': 'TB', 'position': 'RB', 'team_color': '#d50a0a'}
-            ],
-            'FLEX': [
-                {'name': 'Kenneth Walker III', 'team': 'SEA', 'position': 'RB', 'team_color': '#002244'}
-            ],
+            'QB': [{'name': 'Josh Allen', 'team': 'BUF', 'position': 'QB', 'team_color': '#00338d'}],
+            'RB': [{'name': "D'Andre Swift", 'team': 'CHI', 'position': 'RB', 'team_color': '#c83803'}],
             'WR': [
-                {'name': 'Mike Evans', 'team': 'TB', 'position': 'WR', 'team_color': '#d50a0a'},
-                {'name': 'Jaxon Smith-Njigba', 'team': 'SEA', 'position': 'WR', 'team_color': '#002244'}
+                {'name': 'Jakobi Meyers', 'team': 'JAX', 'position': 'WR', 'team_color': '#006778'},
+                {'name': 'Rome Odunze', 'team': 'CHI', 'position': 'WR', 'team_color': '#c83803'}
             ],
-            'TE': [{'name': 'Cade Otton', 'team': 'TB', 'position': 'TE', 'team_color': '#d50a0a'}],
-            'K': [{'name': 'Chase McLaughlin', 'team': 'TB', 'position': 'K', 'team_color': '#d50a0a'}]
+            'TE': [{'name': 'Brenton Strange', 'team': 'JAX', 'position': 'TE', 'team_color': '#006778'}],
+            'FLEX': [{'name': 'Kyle Williams', 'team': 'NE', 'position': 'WR', 'team_color': '#002244'}],
+            'K': [{'name': 'Cam Little', 'team': 'JAX', 'position': 'K', 'team_color': '#006778'}]
         },
-        'color': '#ff6b35'
+        'color': '#3b82f6'
     }
     
-    teams["John's Team"] = {
+    teams["Coach"] = {
         'roster': {
-            'QB': [{'name': 'Sam Darnold', 'team': 'MIN', 'position': 'QB', 'team_color': '#4f2683'}],
-            'RB': [
-                {'name': 'Zach Charbonnet', 'team': 'SEA', 'position': 'RB', 'team_color': '#002244'}
-            ],
-            'FLEX': [
-                {'name': 'Christian McCaffrey', 'team': 'SF', 'position': 'RB', 'team_color': '#aa0000'}
-            ],
+            'QB': [{'name': 'Matthew Stafford', 'team': 'LAR', 'position': 'QB', 'team_color': '#003594'}],
+            'RB': [{'name': 'Christian McCaffrey', 'team': 'SF', 'position': 'RB', 'team_color': '#aa0000'}],
             'WR': [
-                {'name': 'Cooper Kupp', 'team': 'LAR', 'position': 'WR', 'team_color': '#003594'},
-                {'name': 'George Kittle', 'team': 'SF', 'position': 'WR', 'team_color': '#aa0000'}
+                {'name': 'Ladd McConkey', 'team': 'LAC', 'position': 'WR', 'team_color': '#0080c6'},
+                {'name': 'Jayden Higgins', 'team': 'HOU', 'position': 'WR', 'team_color': '#03202f'}
             ],
-            'TE': [{'name': 'AJ Barner', 'team': 'SEA', 'position': 'TE', 'team_color': '#002244'}],
-            'K': [{'name': 'Jason Myers', 'team': 'SEA', 'position': 'K', 'team_color': '#002244'}]
+            'TE': [{'name': 'Hunter Henry', 'team': 'NE', 'position': 'TE', 'team_color': '#002244'}],
+            'FLEX': [{'name': 'Chuba Hubbard', 'team': 'CAR', 'position': 'RB', 'team_color': '#0085ca'}],
+            'K': [{'name': 'Cairo Santos', 'team': 'CHI', 'position': 'K', 'team_color': '#c83803'}]
         },
-        'color': '#4ecdc4'
+        'color': '#ef4444'
+    }
+    
+    teams["Beard"] = {
+        'roster': {
+            'QB': [{'name': 'Trevor Lawrence', 'team': 'JAX', 'position': 'QB', 'team_color': '#006778'}],
+            'RB': [{'name': 'Rhamondre Stevenson', 'team': 'NE', 'position': 'RB', 'team_color': '#002244'}],
+            'WR': [
+                {'name': 'Puka Nacua', 'team': 'LAR', 'position': 'WR', 'team_color': '#003594'},
+                {'name': 'Quentin Johnston', 'team': 'LAC', 'position': 'WR', 'team_color': '#0080c6'}
+            ],
+            'TE': [{'name': 'Dalton Kincaid', 'team': 'BUF', 'position': 'TE', 'team_color': '#00338d'}],
+            'FLEX': [{'name': 'Calvin Austin III', 'team': 'PIT', 'position': 'WR', 'team_color': '#ffb612'}],
+            'K': [{'name': 'Cameron Dicker', 'team': 'LAC', 'position': 'K', 'team_color': '#0080c6'}]
+        },
+        'color': '#10b981'
+    }
+    
+    teams["Dom"] = {
+        'roster': {
+            'QB': [{'name': 'Jalen Hurts', 'team': 'PHI', 'position': 'QB', 'team_color': '#004c54'}],
+            'RB': [{'name': 'James Cook', 'team': 'BUF', 'position': 'RB', 'team_color': '#00338d'}],
+            'WR': [
+                {'name': 'DeVonta Smith', 'team': 'PHI', 'position': 'WR', 'team_color': '#004c54'},
+                {'name': 'DJ Moore', 'team': 'CHI', 'position': 'WR', 'team_color': '#c83803'}
+            ],
+            'TE': [{'name': 'Tyler Higbee', 'team': 'LAR', 'position': 'TE', 'team_color': '#003594'}],
+            'FLEX': [{'name': 'Rico Dowdle', 'team': 'CAR', 'position': 'RB', 'team_color': '#0085ca'}],
+            'K': [{'name': "Ka'imi Fairbairn", 'team': 'HOU', 'position': 'K', 'team_color': '#03202f'}]
+        },
+        'color': '#f59e0b'
+    }
+    
+    teams["Mannix"] = {
+        'roster': {
+            'QB': [{'name': 'Justin Herbert', 'team': 'LAC', 'position': 'QB', 'team_color': '#0080c6'}],
+            'RB': [{'name': 'Josh Jacobs', 'team': 'GB', 'position': 'RB', 'team_color': '#203731'}],
+            'WR': [
+                {'name': 'Jauan Jennings', 'team': 'SF', 'position': 'WR', 'team_color': '#aa0000'},
+                {'name': 'Brian Thomas Jr.', 'team': 'JAX', 'position': 'WR', 'team_color': '#006778'}
+            ],
+            'TE': [{'name': 'Colby Parkinson', 'team': 'LAR', 'position': 'TE', 'team_color': '#003594'}],
+            'FLEX': [{'name': 'Keon Coleman', 'team': 'BUF', 'position': 'WR', 'team_color': '#00338d'}],
+            'K': [{'name': 'Matt Prater', 'team': 'BUF', 'position': 'K', 'team_color': '#00338d'}]
+        },
+        'color': '#8b5cf6'
+    }
+    
+    teams["Graham"] = {
+        'roster': {
+            'QB': [{'name': 'Bryce Young', 'team': 'CAR', 'position': 'QB', 'team_color': '#0085ca'}],
+            'RB': [{'name': 'Saquon Barkley', 'team': 'PHI', 'position': 'RB', 'team_color': '#004c54'}],
+            'WR': [
+                {'name': 'DK Metcalf', 'team': 'PIT', 'position': 'WR', 'team_color': '#ffb612'},
+                {'name': 'Jayden Reed', 'team': 'GB', 'position': 'WR', 'team_color': '#203731'}
+            ],
+            'TE': [{'name': 'Colston Loveland', 'team': 'CHI', 'position': 'TE', 'team_color': '#c83803'}],
+            'FLEX': [{'name': 'Kyle Monangai', 'team': 'CHI', 'position': 'RB', 'team_color': '#c83803'}],
+            'K': [{'name': 'Ryan Fitzgerald', 'team': 'CAR', 'position': 'K', 'team_color': '#0085ca'}]
+        },
+        'color': '#06b6d4'
+    }
+    
+    teams["Jared"] = {
+        'roster': {
+            'QB': [{'name': 'Drake Maye', 'team': 'NE', 'position': 'QB', 'team_color': '#002244'}],
+            'RB': [{'name': 'Travis Etienne', 'team': 'JAX', 'position': 'RB', 'team_color': '#006778'}],
+            'WR': [
+                {'name': 'Christian Watson', 'team': 'GB', 'position': 'WR', 'team_color': '#203731'},
+                {'name': 'Jalen Coker', 'team': 'CAR', 'position': 'WR', 'team_color': '#0085ca'}
+            ],
+            'TE': [{'name': 'Dalton Schultz', 'team': 'HOU', 'position': 'TE', 'team_color': '#03202f'}],
+            'FLEX': [{'name': 'Woody Marks', 'team': 'HOU', 'position': 'RB', 'team_color': '#03202f'}],
+            'K': [{'name': 'Jake Elliott', 'team': 'PHI', 'position': 'K', 'team_color': '#004c54'}]
+        },
+        'color': '#f97316'
+    }
+    
+    teams["Brady"] = {
+        'roster': {
+            'QB': [{'name': 'Jordan Love', 'team': 'GB', 'position': 'QB', 'team_color': '#203731'}],
+            'RB': [{'name': 'Jaylen Warren', 'team': 'PIT', 'position': 'RB', 'team_color': '#ffb612'}],
+            'WR': [
+                {'name': 'AJ Brown', 'team': 'PHI', 'position': 'WR', 'team_color': '#004c54'},
+                {'name': 'Parker Washington', 'team': 'JAX', 'position': 'WR', 'team_color': '#006778'}
+            ],
+            'TE': [{'name': 'Luke Musgrave', 'team': 'GB', 'position': 'TE', 'team_color': '#203731'}],
+            'FLEX': [{'name': 'Blake Corum', 'team': 'LAR', 'position': 'RB', 'team_color': '#003594'}],
+            'K': [{'name': 'Eddy Pineiro', 'team': 'SF', 'position': 'K', 'team_color': '#aa0000'}]
+        },
+        'color': '#84cc16'
+    }
+    
+    teams["Keaton"] = {
+        'roster': {
+            'QB': [{'name': 'Brock Purdy', 'team': 'SF', 'position': 'QB', 'team_color': '#aa0000'}],
+            'RB': [{'name': 'Kyren Williams', 'team': 'LAR', 'position': 'RB', 'team_color': '#003594'}],
+            'WR': [
+                {'name': 'Stefon Diggs', 'team': 'NE', 'position': 'WR', 'team_color': '#002244'},
+                {'name': 'Romeo Doubs', 'team': 'GB', 'position': 'WR', 'team_color': '#203731'}
+            ],
+            'TE': [{'name': 'Orande Gadsden', 'team': 'LAC', 'position': 'TE', 'team_color': '#0080c6'}],
+            'FLEX': [{'name': 'Pat Freiermuth', 'team': 'PIT', 'position': 'TE', 'team_color': '#ffb612'}],
+            'K': [{'name': 'Andy Borregales', 'team': 'NE', 'position': 'K', 'team_color': '#002244'}]
+        },
+        'color': '#ec4899'
+    }
+    
+    teams["Steck"] = {
+        'roster': {
+            'QB': [{'name': 'CJ Stroud', 'team': 'HOU', 'position': 'QB', 'team_color': '#03202f'}],
+            'RB': [{'name': 'TreVeyon Henderson', 'team': 'NE', 'position': 'RB', 'team_color': '#002244'}],
+            'WR': [
+                {'name': 'Nico Collins', 'team': 'HOU', 'position': 'WR', 'team_color': '#03202f'},
+                {'name': 'Ricky Pearsall', 'team': 'SF', 'position': 'WR', 'team_color': '#aa0000'}
+            ],
+            'TE': [{'name': 'Dallas Goedert', 'team': 'PHI', 'position': 'TE', 'team_color': '#004c54'}],
+            'FLEX': [{'name': 'Kayshon Boutte', 'team': 'NE', 'position': 'WR', 'team_color': '#002244'}],
+            'K': [{'name': 'Chris Boswell', 'team': 'PIT', 'position': 'K', 'team_color': '#ffb612'}]
+        },
+        'color': '#6366f1'
+    }
+    
+    teams["Goose"] = {
+        'roster': {
+            'QB': [{'name': 'Caleb Williams', 'team': 'CHI', 'position': 'QB', 'team_color': '#c83803'}],
+            'RB': [{'name': 'Omarion Hampton', 'team': 'LAC', 'position': 'RB', 'team_color': '#0080c6'}],
+            'WR': [
+                {'name': 'Tetairoa McMillan', 'team': 'CAR', 'position': 'WR', 'team_color': '#0085ca'},
+                {'name': 'Keenan Allen', 'team': 'LAC', 'position': 'WR', 'team_color': '#0080c6'}
+            ],
+            'TE': [{'name': 'Dawson Knox', 'team': 'BUF', 'position': 'TE', 'team_color': '#00338d'}],
+            'FLEX': [{'name': 'Kenneth Gainwell', 'team': 'PIT', 'position': 'RB', 'team_color': '#ffb612'}],
+            'K': [{'name': 'Brandon McManus', 'team': 'GB', 'position': 'K', 'team_color': '#203731'}]
+        },
+        'color': '#ef4444'
+    }
+    
+    teams["Buck"] = {
+        'roster': {
+            'QB': [{'name': 'Aaron Rodgers', 'team': 'PIT', 'position': 'QB', 'team_color': '#ffb612'}],
+            'RB': [{'name': 'Ty Johnson', 'team': 'BUF', 'position': 'RB', 'team_color': '#00338d'}],
+            'WR': [
+                {'name': 'Davante Adams', 'team': 'LAR', 'position': 'WR', 'team_color': '#003594'},
+                {'name': 'Khalil Shakir', 'team': 'BUF', 'position': 'WR', 'team_color': '#00338d'}
+            ],
+            'TE': [{'name': 'George Kittle', 'team': 'SF', 'position': 'TE', 'team_color': '#aa0000'}],
+            'FLEX': [{'name': 'Luther Burden III', 'team': 'CHI', 'position': 'WR', 'team_color': '#c83803'}],
+            'K': [{'name': 'Harrison Mevis', 'team': 'LAR', 'position': 'K', 'team_color': '#003594'}]
+        },
+        'color': '#10b981'
     }
 
 # Roster structure requirements
@@ -318,7 +460,22 @@ DEFAULT_SCORING = {
     'fg_50_plus': 5,   # Field goal 50+ yards
     'fg_miss': -1,     # Missed field goal
     'extra_point': 1,  # Extra point made
-    'extra_miss': -1   # Extra point missed
+    'extra_miss': -1,  # Extra point missed
+    
+    # Defensive scoring (backend only, not displayed in UI)
+    'dst_td': 6,           # Defensive touchdown
+    'dst_safety': 2,       # Safety
+    'dst_interception': 2, # Interception
+    'dst_fumble_rec': 2,   # Fumble recovery
+    'dst_sack': 1,         # Sack
+    'dst_block': 2,        # Blocked kick
+    'dst_points_0': 10,    # 0 points allowed
+    'dst_points_1_6': 7,   # 1-6 points allowed
+    'dst_points_7_13': 4,  # 7-13 points allowed
+    'dst_points_14_20': 1, # 14-20 points allowed
+    'dst_points_21_27': 0, # 21-27 points allowed
+    'dst_points_28_34': -1, # 28-34 points allowed
+    'dst_points_35_plus': -4 # 35+ points allowed
 }
 
 # Initialize scoring settings
@@ -513,19 +670,19 @@ def get_live_stats():
 def calculate_dst_points_allowed_score(points_allowed):
     """Calculate D/ST scoring based on points allowed."""
     if points_allowed == 0:
-        return SCORING['dst_pts_0']
+        return SCORING['dst_points_0']
     elif 1 <= points_allowed <= 6:
-        return SCORING['dst_pts_1_6']
+        return SCORING['dst_points_1_6']
     elif 7 <= points_allowed <= 13:
-        return SCORING['dst_pts_7_13']
+        return SCORING['dst_points_7_13']
     elif 14 <= points_allowed <= 20:
-        return SCORING['dst_pts_14_20']
+        return SCORING['dst_points_14_20']
     elif 21 <= points_allowed <= 27:
-        return SCORING['dst_pts_21_27']
+        return SCORING['dst_points_21_27']
     elif 28 <= points_allowed <= 34:
-        return SCORING['dst_pts_28_34']
+        return SCORING['dst_points_28_34']
     else:  # 35+ points
-        return SCORING['dst_pts_35_plus']
+        return SCORING['dst_points_35_plus']
 
 def get_live_stats():
     """Fetches live NFL stats from ESPN's public scoreboard API."""
@@ -677,6 +834,12 @@ def get_live_stats():
         
         if games_processed == 0:
             print("No live games available for scoring")
+        
+        # Debug: Show what we're about to return
+        print(f"🔄 RETURN DEBUG: Returning {len(player_stats)} players with scores")
+        for player_name, score in player_stats.items():
+            if score > 0:
+                print(f"  📈 {player_name}: {score} pts")
         
         return player_stats, player_detailed_stats
         
@@ -1097,6 +1260,12 @@ def index():
     edit_mode = request.args.get('edit', '').lower() == 'true'
     live_data, detailed_stats = get_live_stats()
     
+    # Debug: Print what's in live_data
+    print(f"🔍 LIVE_DATA DEBUG: {len(live_data)} players found")
+    for player_name, score in live_data.items():
+        if score > 0:  # Only print players with points
+            print(f"  📊 {player_name}: {score} pts")
+    
     final_scores = {}
     for user, team_data in teams.items():
         # Handle both old and new team data structures
@@ -1129,6 +1298,7 @@ def index():
             teams[user]['roster'] = roster
         
         # Calculate scores for all players
+        print(f"🏈 TEAM DEBUG for {user}:")
         for position, players in roster.items():
             for player in players:
                 if isinstance(player, dict):
@@ -1140,6 +1310,8 @@ def index():
                 player_scores[player_name] = score
                 player_details[player_name] = detailed_stats.get(player_name, {})
                 user_total += score
+                
+                print(f"  👤 {player_name} ({position}): {score} pts (found in live_data: {player_name in live_data})")
                 
         final_scores[user] = {
             "roster": roster,
