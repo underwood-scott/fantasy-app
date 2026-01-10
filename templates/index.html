@@ -559,7 +559,7 @@
                     <form class="add-team-form" method="POST" action="/add_team">
                         <input type="text" name="team_name" placeholder="Enter team name..." required>
                         <div class="color-picker-container">
-                            <input type="color" name="team_color" value="#3b82f6" title="Choose team color" onchange="updateColorPreview(this)">
+                            <input type="color" name="team_color" value="" title="Choose team color" onchange="updateColorPreview(this)">
                             <div class="color-preview">
                                 <div class="color-circle" style="background-color: #3b82f6;"></div>
                             </div>
@@ -818,10 +818,9 @@
             // Check if player can be added to this position
             const playerPosition = draggedPlayerData.position;
             
-            // Allow flex positioning (TE can accept RB/WR and vice versa)
+            // Allow FLEX positioning and exact position matches
             const validDrop = playerPosition === targetPosition || 
-                (targetPosition === 'TE' && ['RB', 'WR', 'TE'].includes(playerPosition)) ||
-                (['RB', 'WR'].includes(targetPosition) && playerPosition === 'TE');
+                (targetPosition === 'FLEX' && ['RB', 'WR', 'TE'].includes(playerPosition));
             
             if (!validDrop) {
                 alert(`Cannot add ${playerPosition} to ${targetPosition} slot`);

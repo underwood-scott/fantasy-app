@@ -3,7 +3,7 @@
 A real-time fantasy football scoring app that pulls live NFL stats from ESPN's API.
 
 ## Features
-- Live scoring for QB, RB, WR, TE, K, and D/ST positions
+- Live scoring for QB, RB, WR, TE, FLEX, and K positions
 - Point Per Reception (PPR) scoring
 - Team management interface
 - Real-time stat updates during games

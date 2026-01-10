@@ -5,6 +5,36 @@ app = Flask(__name__)
 
 # 1. SIMPLE STORAGE (In a real app, use a database or JSON file)
 # Example: {'User1': {'roster': {...}, 'color': '#ff0000'}, 'User2': {'roster': {...}, 'color': '#00ff00'}}
+
+# Predefined team colors for cycling
+TEAM_COLORS = [
+    '#3b82f6',  # Blue
+    '#ef4444',  # Red  
+    '#10b981',  # Green
+    '#f59e0b',  # Orange
+    '#8b5cf6',  # Purple
+    '#06b6d4',  # Cyan
+    '#f97316',  # Orange-red
+    '#84cc16',  # Lime
+    '#ec4899',  # Pink
+    '#6366f1',  # Indigo
+]
+
+def get_next_team_color():
+    """Get the next unused team color, cycling through available colors."""
+    used_colors = set()
+    for team_data in teams.values():
+        if isinstance(team_data, dict) and 'color' in team_data:
+            used_colors.add(team_data['color'])
+    
+    # Find first unused color
+    for color in TEAM_COLORS:
+        if color not in used_colors:
+            return color
+    
+    # If all colors are used, cycle based on team count
+    return TEAM_COLORS[len(teams) % len(TEAM_COLORS)]
+
 teams = {}
 
 # Initialize sample teams if none exist
@@ -13,7 +43,9 @@ if not teams:
         'roster': {
             'QB': [{'name': 'Baker Mayfield', 'team': 'TB', 'position': 'QB', 'team_color': '#d50a0a'}],
             'RB': [
-                {'name': 'Bucky Irving', 'team': 'TB', 'position': 'RB', 'team_color': '#d50a0a'},
+                {'name': 'Bucky Irving', 'team': 'TB', 'position': 'RB', 'team_color': '#d50a0a'}
+            ],
+            'FLEX': [
                 {'name': 'Kenneth Walker III', 'team': 'SEA', 'position': 'RB', 'team_color': '#002244'}
             ],
             'WR': [
@@ -21,8 +53,7 @@ if not teams:
                 {'name': 'Jaxon Smith-Njigba', 'team': 'SEA', 'position': 'WR', 'team_color': '#002244'}
             ],
             'TE': [{'name': 'Cade Otton', 'team': 'TB', 'position': 'TE', 'team_color': '#d50a0a'}],
-            'K': [{'name': 'Chase McLaughlin', 'team': 'TB', 'position': 'K', 'team_color': '#d50a0a'}],
-            'DST': [{'name': 'TB DST', 'team': 'TB', 'position': 'DST', 'team_color': '#d50a0a'}]
+            'K': [{'name': 'Chase McLaughlin', 'team': 'TB', 'position': 'K', 'team_color': '#d50a0a'}]
         },
         'color': '#ff6b35'
     }
@@ -31,7 +62,9 @@ if not teams:
         'roster': {
             'QB': [{'name': 'Sam Darnold', 'team': 'MIN', 'position': 'QB', 'team_color': '#4f2683'}],
             'RB': [
-                {'name': 'Zach Charbonnet', 'team': 'SEA', 'position': 'RB', 'team_color': '#002244'},
+                {'name': 'Zach Charbonnet', 'team': 'SEA', 'position': 'RB', 'team_color': '#002244'}
+            ],
+            'FLEX': [
                 {'name': 'Christian McCaffrey', 'team': 'SF', 'position': 'RB', 'team_color': '#aa0000'}
             ],
             'WR': [
@@ -39,8 +72,7 @@ if not teams:
                 {'name': 'George Kittle', 'team': 'SF', 'position': 'WR', 'team_color': '#aa0000'}
             ],
             'TE': [{'name': 'AJ Barner', 'team': 'SEA', 'position': 'TE', 'team_color': '#002244'}],
-            'K': [{'name': 'Jason Myers', 'team': 'SEA', 'position': 'K', 'team_color': '#002244'}],
-            'DST': [{'name': 'SF DST', 'team': 'SF', 'position': 'DST', 'team_color': '#aa0000'}]
+            'K': [{'name': 'Jason Myers', 'team': 'SEA', 'position': 'K', 'team_color': '#002244'}]
         },
         'color': '#4ecdc4'
     }
@@ -48,11 +80,11 @@ if not teams:
 # Roster structure requirements
 ROSTER_POSITIONS = {
     'QB': 1,
-    'RB': 2, 
+    'RB': 1,
     'WR': 2,
-    'TE': 1,  # This will be the flex spot that can also hold RB/WR
-    'K': 1,
-    'DST': 1
+    'TE': 1,
+    'FLEX': 1,  # Can be RB, WR, or TE
+    'K': 1
 }
 
 # Position mapping for ESPN data
@@ -62,10 +94,7 @@ POSITION_MAPPING = {
     'WR': 'WR',
     'TE': 'TE',
     'K': 'K',
-    'PK': 'K',  # Some kickers are listed as PK
-    'D/ST': 'DST',
-    'DEF': 'DST',
-    'DST': 'DST'
+    'PK': 'K'  # Some kickers are listed as PK
 }
 
 # Cache for players to avoid repeated API calls
@@ -130,10 +159,10 @@ def get_available_players():
     players_by_position = {
         'QB': [],
         'RB': [],
-        'WR': [], 
+        'WR': [],
         'TE': [],
-        'K': [],
-        'DST': []
+        'FLEX': [],
+        'K': []
     }
     
     try:
@@ -163,23 +192,6 @@ def get_available_players():
                     continue
                 
                 print(f"Processing team: {team_name} ({team_abbr})")
-                
-                # Add DST for this team
-                dst_name = f"{team_abbr} DST"
-                team_color = team_info.get('color', '000000')  # Get team color, default to black
-                # Ensure color has # prefix and is valid
-                if team_color and not team_color.startswith('#'):
-                    team_color = f"#{team_color}"
-                if not team_color or team_color == '#' or team_color == '#000000':
-                    team_color = '#64748b'  # Default gray for missing colors
-                    
-                if dst_name != " DST":
-                    players_by_position['DST'].append({
-                        'name': dst_name,
-                        'team': team_abbr,
-                        'position': 'DST',
-                        'team_color': team_color
-                    })
                 
                 # Try to get roster from the roster API endpoint
                 # Use the team abbreviation to construct roster URL
@@ -247,6 +259,12 @@ def get_available_players():
                     else:
                         print(f"  Failed to get roster for {team_name}: {roster_response.status_code}")
         
+        # Populate FLEX position with RB, WR, and TE players
+        flex_players = []
+        for pos in ['RB', 'WR', 'TE']:
+            flex_players.extend(players_by_position[pos])
+        players_by_position['FLEX'] = flex_players
+        
         # Remove duplicates and sort by name
         for position in players_by_position:
             # Remove duplicates based on player name
@@ -300,28 +318,13 @@ DEFAULT_SCORING = {
     'fg_50_plus': 5,   # Field goal 50+ yards
     'fg_miss': -1,     # Missed field goal
     'extra_point': 1,  # Extra point made
-    'extra_miss': -1,  # Extra point missed
-    
-    # D/ST scoring
-    'dst_td': 6,       # Defensive/Special teams TD
-    'dst_safety': 2,   # Safety
-    'dst_interception': 2,  # Interception
-    'dst_fumble_rec': 2,    # Fumble recovery
-    'dst_sack': 1,     # Sack
-    'dst_block': 2,    # Blocked kick
-    'dst_pts_0': 10,   # 0 points allowed
-    'dst_pts_1_6': 7,  # 1-6 points allowed
-    'dst_pts_7_13': 4, # 7-13 points allowed
-    'dst_pts_14_20': 1,# 14-20 points allowed
-    'dst_pts_21_27': 0,# 21-27 points allowed
-    'dst_pts_28_34': -1, # 28-34 points allowed
-    'dst_pts_35_plus': -4  # 35+ points allowed
+    'extra_miss': -1   # Extra point missed
 }
 
 # Initialize scoring settings
 SCORING = DEFAULT_SCORING.copy()
 
-def get_team_defensive_performance():
+def get_live_stats():
     """Get team defensive performance (points allowed and defensive stats) from scoreboard."""
     team_performance = {}
     
@@ -533,7 +536,6 @@ def get_live_stats():
         data = response.json()
         player_stats = {}
         player_detailed_stats = {}
-        dst_stats = {}  # Track D/ST stats by team
         team_defensive_performance = {}  # Track team defensive stats (sacks, ints, points allowed)
         games_processed = 0
 
@@ -648,24 +650,6 @@ def get_live_stats():
                         name = athlete['athlete']['displayName']
                         stats = athlete.get('stats', [])
                         
-                        # Skip individual defensive players - aggregate their stats for D/ST instead
-                        if stat_name in ['defensive', 'interceptions'] and not name.endswith(' DST'):
-                            print(f"  🛡️ Aggregating defensive stats for {name} ({team_abbr})")
-                            
-                            # Initialize team defensive stats if needed
-                            if team_abbr not in dst_stats:
-                                dst_stats[team_abbr] = {}
-                            if name not in dst_stats[team_abbr]:
-                                dst_stats[team_abbr][name] = {}
-                            
-                            # Extract defensive stats for aggregation
-                            detailed_stats = extract_key_stats(stat_name, keys, stats)
-                            if detailed_stats:
-                                dst_stats[team_abbr][name].update(detailed_stats)
-                                print(f"    Added stats: {detailed_stats}")
-                            
-                            continue
-                        
                         print(f"  🏈 Processing {name} for {stat_name}")
                         
                         if name not in player_stats:
@@ -693,88 +677,6 @@ def get_live_stats():
         
         if games_processed == 0:
             print("No live games available for scoring")
-        
-        # Process D/ST aggregation - assign team defensive stats to D/ST units
-        print(f"\n🛡️ AGGREGATING D/ST STATS:")
-        print(f"Available teams with defensive stats: {list(dst_stats.keys())}")
-        
-        # Use team defensive performance that was extracted during game processing
-        print(f"Team defensive performance: {team_defensive_performance}")
-        
-        for dst_team, team_defensive_stats in dst_stats.items():
-            dst_name = f"{dst_team} DST"
-            print(f"Creating D/ST player: '{dst_name}'")
-            if dst_name not in player_stats:
-                player_stats[dst_name] = 0
-                player_detailed_stats[dst_name] = {}
-            
-            # Calculate total D/ST points for this team
-            dst_points = 0
-            dst_details = {}
-            
-            # Use team-level defensive stats if available, otherwise fall back to aggregated player stats
-            if dst_team in team_defensive_performance:
-                team_def_data = team_defensive_performance[dst_team]
-                
-                # Use team-level stats
-                total_sacks = team_def_data.get('sacks', 0)
-                total_ints = team_def_data.get('interceptions', 0) 
-                total_fum_rec = team_def_data.get('fumbles_recovered', 0)
-                total_tds = team_def_data.get('defensive_tds', 0)
-                
-                print(f"  Using team-level stats for {dst_name}: sacks={total_sacks}, ints={total_ints}, fum_rec={total_fum_rec}, tds={total_tds}")
-            else:
-                # No team-level stats available
-                total_sacks = 0
-                total_ints = 0
-                total_fum_rec = 0
-                total_tds = 0
-                
-                print(f"  No team-level defensive stats available for {dst_name}")
-            
-            # Calculate D/ST points
-            if total_sacks > 0:
-                sack_points = total_sacks * SCORING['dst_sack']
-                dst_points += sack_points
-                dst_details['sacks'] = total_sacks
-                print(f"  {dst_name}: {total_sacks} sacks = {sack_points} points")
-                
-            if total_ints > 0:
-                int_points = total_ints * SCORING['dst_interception']
-                dst_points += int_points
-                dst_details['ints'] = total_ints
-                print(f"  {dst_name}: {total_ints} interceptions = {int_points} points")
-                
-            if total_fum_rec > 0:
-                fum_points = total_fum_rec * SCORING['dst_fumble_rec']
-                dst_points += fum_points
-                dst_details['fum_rec'] = total_fum_rec
-                print(f"  {dst_name}: {total_fum_rec} fumble recoveries = {fum_points} points")
-                
-            if total_tds > 0:
-                td_points = total_tds * SCORING['dst_td']
-                dst_points += td_points
-                dst_details['tds'] = total_tds
-                print(f"  {dst_name}: {total_tds} defensive TDs = {td_points} points")
-            
-            # Add points allowed scoring
-            if dst_team in team_defensive_performance:
-                points_allowed = team_defensive_performance[dst_team]['points_allowed']
-                points_allowed_score = calculate_dst_points_allowed_score(points_allowed)
-                dst_points += points_allowed_score
-                dst_details['points_allowed'] = points_allowed
-                print(f"  {dst_name}: {points_allowed} points allowed = {points_allowed_score} points")
-            else:
-                print(f"  {dst_name}: No points allowed data available")
-            
-            # Add points to the D/ST unit
-            player_stats[dst_name] += dst_points
-            player_detailed_stats[dst_name].update(dst_details)
-            
-            if dst_points > 0:
-                print(f"  ✅ {dst_name}: Total defensive points = {dst_points}")
-            else:
-                print(f"  ⚪ {dst_name}: No defensive points scored")
         
         return player_stats, player_detailed_stats
         
@@ -1219,11 +1121,11 @@ def index():
             # Try to place old players in appropriate positions (simplified)
             for i, player in enumerate(old_roster[:sum(ROSTER_POSITIONS.values())]):
                 if i == 0: roster['QB'].append(player)
-                elif i <= 2: roster['RB'].append(player) 
-                elif i <= 4: roster['WR'].append(player)
-                elif i == 5: roster['TE'].append(player)
-                elif i == 6: roster['DST'].append(player)
-                elif i == 7: roster['K'].append(player)
+                elif i == 1: roster['RB'].append(player)  # Only 1 RB now
+                elif i <= 3: roster['WR'].append(player)  # WR positions 2-3
+                elif i == 4: roster['TE'].append(player)
+                elif i == 5: roster['FLEX'].append(player)  # FLEX is position 5
+                elif i == 6: roster['K'].append(player)
             teams[user]['roster'] = roster
         
         # Calculate scores for all players
@@ -1278,7 +1180,12 @@ def index():
 @app.route('/add_team', methods=['POST'])
 def add_team():
     team_name = request.form.get('team_name', '').strip()
-    team_color = request.form.get('team_color', '#3b82f6').strip()
+    team_color = request.form.get('team_color', '').strip()
+    
+    # If no color provided or default color, use next available color
+    if not team_color or team_color == '#3b82f6':
+        team_color = get_next_team_color()
+    
     if team_name and team_name not in teams:
         teams[team_name] = {
             'roster': {pos: [] for pos in ROSTER_POSITIONS.keys()},
