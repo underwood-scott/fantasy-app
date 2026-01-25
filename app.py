@@ -39,184 +39,64 @@ teams = {}
 
 # Initialize sample teams if none exist
 if not teams:
-    teams["Tommy"] = {
+    teams["Coach"] = {
         'roster': {
-            'QB': [{'name': 'Josh Allen', 'team': 'BUF', 'position': 'QB', 'team_color': '#00338d'}],
-            'RB': [{'name': "D'Andre Swift", 'team': 'CHI', 'position': 'RB', 'team_color': '#c83803'}],
+            'QB': [{'name': 'Drake Maye', 'team': 'NE', 'position': 'QB', 'team_color': '#002244'}],
+            'RB': [{'name': 'RJ Harvey', 'team': 'DEN', 'position': 'RB', 'team_color': '#fb4f14'}],
             'WR': [
-                {'name': 'Jakobi Meyers', 'team': 'JAX', 'position': 'WR', 'team_color': '#006778'},
-                {'name': 'Rome Odunze', 'team': 'CHI', 'position': 'WR', 'team_color': '#c83803'}
+                {'name': 'Puka Nacua', 'team': 'LAR', 'position': 'WR', 'team_color': '#003594'},
+                {'name': 'Marvin Mims Jr.', 'team': 'DEN', 'position': 'WR', 'team_color': '#fb4f14'}
             ],
-            'TE': [{'name': 'Brenton Strange', 'team': 'JAX', 'position': 'TE', 'team_color': '#006778'}],
-            'FLEX': [{'name': 'Kyle Williams', 'team': 'NE', 'position': 'WR', 'team_color': '#002244'}],
-            'K': [{'name': 'Cam Little', 'team': 'JAX', 'position': 'K', 'team_color': '#006778'}]
+            'TE': [{'name': 'Hunter Henry', 'team': 'NE', 'position': 'TE', 'team_color': '#002244'}],
+            'FLEX': [{'name': 'Rashid Shaheed', 'team': 'SEA', 'position': 'WR', 'team_color': '#002244'}],
+            'K': [{'name': 'Will Lutz', 'team': 'DEN', 'position': 'K', 'team_color': '#fb4f14'}]
         },
         'color': '#3b82f6'
     }
     
-    teams["Coach"] = {
-        'roster': {
-            'QB': [{'name': 'Matthew Stafford', 'team': 'LAR', 'position': 'QB', 'team_color': '#003594'}],
-            'RB': [{'name': 'Christian McCaffrey', 'team': 'SF', 'position': 'RB', 'team_color': '#aa0000'}],
-            'WR': [
-                {'name': 'Ladd McConkey', 'team': 'LAC', 'position': 'WR', 'team_color': '#0080c6'},
-                {'name': 'Jayden Higgins', 'team': 'HOU', 'position': 'WR', 'team_color': '#03202f'}
-            ],
-            'TE': [{'name': 'Hunter Henry', 'team': 'NE', 'position': 'TE', 'team_color': '#002244'}],
-            'FLEX': [{'name': 'Chuba Hubbard', 'team': 'CAR', 'position': 'RB', 'team_color': '#0085ca'}],
-            'K': [{'name': 'Cairo Santos', 'team': 'CHI', 'position': 'K', 'team_color': '#c83803'}]
-        },
-        'color': '#ef4444'
-    }
-    
-    teams["Beard"] = {
-        'roster': {
-            'QB': [{'name': 'Trevor Lawrence', 'team': 'JAX', 'position': 'QB', 'team_color': '#006778'}],
-            'RB': [{'name': 'Rhamondre Stevenson', 'team': 'NE', 'position': 'RB', 'team_color': '#002244'}],
-            'WR': [
-                {'name': 'Puka Nacua', 'team': 'LAR', 'position': 'WR', 'team_color': '#003594'},
-                {'name': 'Quentin Johnston', 'team': 'LAC', 'position': 'WR', 'team_color': '#0080c6'}
-            ],
-            'TE': [{'name': 'Dalton Kincaid', 'team': 'BUF', 'position': 'TE', 'team_color': '#00338d'}],
-            'FLEX': [{'name': 'Calvin Austin III', 'team': 'PIT', 'position': 'WR', 'team_color': '#ffb612'}],
-            'K': [{'name': 'Cameron Dicker', 'team': 'LAC', 'position': 'K', 'team_color': '#0080c6'}]
-        },
-        'color': '#10b981'
-    }
-    
-    teams["Dom"] = {
-        'roster': {
-            'QB': [{'name': 'Jalen Hurts', 'team': 'PHI', 'position': 'QB', 'team_color': '#004c54'}],
-            'RB': [{'name': 'James Cook', 'team': 'BUF', 'position': 'RB', 'team_color': '#00338d'}],
-            'WR': [
-                {'name': 'DeVonta Smith', 'team': 'PHI', 'position': 'WR', 'team_color': '#004c54'},
-                {'name': 'DJ Moore', 'team': 'CHI', 'position': 'WR', 'team_color': '#c83803'}
-            ],
-            'TE': [{'name': 'Tyler Higbee', 'team': 'LAR', 'position': 'TE', 'team_color': '#003594'}],
-            'FLEX': [{'name': 'Rico Dowdle', 'team': 'CAR', 'position': 'RB', 'team_color': '#0085ca'}],
-            'K': [{'name': "Ka'imi Fairbairn", 'team': 'HOU', 'position': 'K', 'team_color': '#03202f'}]
-        },
-        'color': '#f59e0b'
-    }
-    
-    teams["Mannix"] = {
-        'roster': {
-            'QB': [{'name': 'Justin Herbert', 'team': 'LAC', 'position': 'QB', 'team_color': '#0080c6'}],
-            'RB': [{'name': 'Josh Jacobs', 'team': 'GB', 'position': 'RB', 'team_color': '#203731'}],
-            'WR': [
-                {'name': 'Jauan Jennings', 'team': 'SF', 'position': 'WR', 'team_color': '#aa0000'},
-                {'name': 'Brian Thomas Jr.', 'team': 'JAX', 'position': 'WR', 'team_color': '#006778'}
-            ],
-            'TE': [{'name': 'Colby Parkinson', 'team': 'LAR', 'position': 'TE', 'team_color': '#003594'}],
-            'FLEX': [{'name': 'Keon Coleman', 'team': 'BUF', 'position': 'WR', 'team_color': '#00338d'}],
-            'K': [{'name': 'Matt Prater', 'team': 'BUF', 'position': 'K', 'team_color': '#00338d'}]
-        },
-        'color': '#8b5cf6'
-    }
-    
     teams["Graham"] = {
         'roster': {
-            'QB': [{'name': 'Bryce Young', 'team': 'CAR', 'position': 'QB', 'team_color': '#0085ca'}],
-            'RB': [{'name': 'Saquon Barkley', 'team': 'PHI', 'position': 'RB', 'team_color': '#004c54'}],
+            'QB': [{'name': 'Matthew Stafford', 'team': 'LAR', 'position': 'QB', 'team_color': '#003594'}],
+            'RB': [{'name': 'Rhamondre Stevenson', 'team': 'NE', 'position': 'RB', 'team_color': '#002244'}],
             'WR': [
-                {'name': 'DK Metcalf', 'team': 'PIT', 'position': 'WR', 'team_color': '#ffb612'},
-                {'name': 'Jayden Reed', 'team': 'GB', 'position': 'WR', 'team_color': '#203731'}
+                {'name': 'Jaxon Smith-Njigba', 'team': 'SEA', 'position': 'WR', 'team_color': '#002244'},
+                {'name': 'Pat Bryant', 'team': 'DEN', 'position': 'WR', 'team_color': '#fb4f14'}
             ],
-            'TE': [{'name': 'Colston Loveland', 'team': 'CHI', 'position': 'TE', 'team_color': '#c83803'}],
-            'FLEX': [{'name': 'Kyle Monangai', 'team': 'CHI', 'position': 'RB', 'team_color': '#c83803'}],
-            'K': [{'name': 'Ryan Fitzgerald', 'team': 'CAR', 'position': 'K', 'team_color': '#0085ca'}]
+            'TE': [{'name': 'Colby Parkinson', 'team': 'LAR', 'position': 'TE', 'team_color': '#003594'}],
+            'FLEX': [{'name': 'Evan Engram', 'team': 'DEN', 'position': 'TE', 'team_color': '#fb4f14'}],
+            'K': [{'name': 'Jason Myers', 'team': 'SEA', 'position': 'K', 'team_color': '#002244'}]
         },
         'color': '#06b6d4'
     }
     
-    teams["Jared"] = {
+    teams["Beard"] = {
         'roster': {
-            'QB': [{'name': 'Drake Maye', 'team': 'NE', 'position': 'QB', 'team_color': '#002244'}],
-            'RB': [{'name': 'Travis Etienne', 'team': 'JAX', 'position': 'RB', 'team_color': '#006778'}],
+            'QB': [{'name': 'Sam Darnold', 'team': 'SEA', 'position': 'QB', 'team_color': '#002244'}],
+            'RB': [{'name': 'Kyren Williams', 'team': 'LAR', 'position': 'RB', 'team_color': '#003594'}],
             'WR': [
-                {'name': 'Christian Watson', 'team': 'GB', 'position': 'WR', 'team_color': '#203731'},
-                {'name': 'Jalen Coker', 'team': 'CAR', 'position': 'WR', 'team_color': '#0085ca'}
+                {'name': 'Stefon Diggs', 'team': 'NE', 'position': 'WR', 'team_color': '#002244'},
+                {'name': 'Cooper Kupp', 'team': 'SEA', 'position': 'WR', 'team_color': '#002244'}
             ],
-            'TE': [{'name': 'Dalton Schultz', 'team': 'HOU', 'position': 'TE', 'team_color': '#03202f'}],
-            'FLEX': [{'name': 'Woody Marks', 'team': 'HOU', 'position': 'RB', 'team_color': '#03202f'}],
-            'K': [{'name': 'Jake Elliott', 'team': 'PHI', 'position': 'K', 'team_color': '#004c54'}]
+            'TE': [{'name': 'Tyler Higbee', 'team': 'LAR', 'position': 'TE', 'team_color': '#003594'}],
+            'FLEX': [{'name': 'TreVeyon Henderson', 'team': 'NE', 'position': 'RB', 'team_color': '#002244'}],
+            'K': [{'name': 'Harrison Mevis', 'team': 'LAR', 'position': 'K', 'team_color': '#003594'}]
         },
-        'color': '#f97316'
-    }
-    
-    teams["Brady"] = {
-        'roster': {
-            'QB': [{'name': 'Jordan Love', 'team': 'GB', 'position': 'QB', 'team_color': '#203731'}],
-            'RB': [{'name': 'Jaylen Warren', 'team': 'PIT', 'position': 'RB', 'team_color': '#ffb612'}],
-            'WR': [
-                {'name': 'AJ Brown', 'team': 'PHI', 'position': 'WR', 'team_color': '#004c54'},
-                {'name': 'Parker Washington', 'team': 'JAX', 'position': 'WR', 'team_color': '#006778'}
-            ],
-            'TE': [{'name': 'Luke Musgrave', 'team': 'GB', 'position': 'TE', 'team_color': '#203731'}],
-            'FLEX': [{'name': 'Blake Corum', 'team': 'LAR', 'position': 'RB', 'team_color': '#003594'}],
-            'K': [{'name': 'Eddy Pineiro', 'team': 'SF', 'position': 'K', 'team_color': '#aa0000'}]
-        },
-        'color': '#84cc16'
+        'color': '#10b981'
     }
     
     teams["Keaton"] = {
         'roster': {
-            'QB': [{'name': 'Brock Purdy', 'team': 'SF', 'position': 'QB', 'team_color': '#aa0000'}],
-            'RB': [{'name': 'Kyren Williams', 'team': 'LAR', 'position': 'RB', 'team_color': '#003594'}],
+            'QB': [{'name': 'Jarrett Stidham', 'team': 'DEN', 'position': 'QB', 'team_color': '#fb4f14'}],
+            'RB': [{'name': 'Kenneth Walker III', 'team': 'SEA', 'position': 'RB', 'team_color': '#002244'}],
             'WR': [
-                {'name': 'Stefon Diggs', 'team': 'NE', 'position': 'WR', 'team_color': '#002244'},
-                {'name': 'Romeo Doubs', 'team': 'GB', 'position': 'WR', 'team_color': '#203731'}
+                {'name': 'Davante Adams', 'team': 'LAR', 'position': 'WR', 'team_color': '#003594'},
+                {'name': 'Courtland Sutton', 'team': 'DEN', 'position': 'WR', 'team_color': '#fb4f14'}
             ],
-            'TE': [{'name': 'Orande Gadsden', 'team': 'LAC', 'position': 'TE', 'team_color': '#0080c6'}],
-            'FLEX': [{'name': 'Pat Freiermuth', 'team': 'PIT', 'position': 'TE', 'team_color': '#ffb612'}],
+            'TE': [{'name': 'AJ Barner', 'team': 'SEA', 'position': 'TE', 'team_color': '#002244'}],
+            'FLEX': [{'name': 'Kayshon Boutte', 'team': 'NE', 'position': 'WR', 'team_color': '#002244'}],
             'K': [{'name': 'Andy Borregales', 'team': 'NE', 'position': 'K', 'team_color': '#002244'}]
         },
         'color': '#ec4899'
-    }
-    
-    teams["Steck"] = {
-        'roster': {
-            'QB': [{'name': 'CJ Stroud', 'team': 'HOU', 'position': 'QB', 'team_color': '#03202f'}],
-            'RB': [{'name': 'TreVeyon Henderson', 'team': 'NE', 'position': 'RB', 'team_color': '#002244'}],
-            'WR': [
-                {'name': 'Nico Collins', 'team': 'HOU', 'position': 'WR', 'team_color': '#03202f'},
-                {'name': 'Ricky Pearsall', 'team': 'SF', 'position': 'WR', 'team_color': '#aa0000'}
-            ],
-            'TE': [{'name': 'Dallas Goedert', 'team': 'PHI', 'position': 'TE', 'team_color': '#004c54'}],
-            'FLEX': [{'name': 'Kayshon Boutte', 'team': 'NE', 'position': 'WR', 'team_color': '#002244'}],
-            'K': [{'name': 'Chris Boswell', 'team': 'PIT', 'position': 'K', 'team_color': '#ffb612'}]
-        },
-        'color': '#6366f1'
-    }
-    
-    teams["Goose"] = {
-        'roster': {
-            'QB': [{'name': 'Caleb Williams', 'team': 'CHI', 'position': 'QB', 'team_color': '#c83803'}],
-            'RB': [{'name': 'Omarion Hampton', 'team': 'LAC', 'position': 'RB', 'team_color': '#0080c6'}],
-            'WR': [
-                {'name': 'Tetairoa McMillan', 'team': 'CAR', 'position': 'WR', 'team_color': '#0085ca'},
-                {'name': 'Keenan Allen', 'team': 'LAC', 'position': 'WR', 'team_color': '#0080c6'}
-            ],
-            'TE': [{'name': 'Dawson Knox', 'team': 'BUF', 'position': 'TE', 'team_color': '#00338d'}],
-            'FLEX': [{'name': 'Kenneth Gainwell', 'team': 'PIT', 'position': 'RB', 'team_color': '#ffb612'}],
-            'K': [{'name': 'Brandon McManus', 'team': 'GB', 'position': 'K', 'team_color': '#203731'}]
-        },
-        'color': '#ef4444'
-    }
-    
-    teams["Buck"] = {
-        'roster': {
-            'QB': [{'name': 'Aaron Rodgers', 'team': 'PIT', 'position': 'QB', 'team_color': '#ffb612'}],
-            'RB': [{'name': 'Ty Johnson', 'team': 'BUF', 'position': 'RB', 'team_color': '#00338d'}],
-            'WR': [
-                {'name': 'Davante Adams', 'team': 'LAR', 'position': 'WR', 'team_color': '#003594'},
-                {'name': 'Khalil Shakir', 'team': 'BUF', 'position': 'WR', 'team_color': '#00338d'}
-            ],
-            'TE': [{'name': 'George Kittle', 'team': 'SF', 'position': 'TE', 'team_color': '#aa0000'}],
-            'FLEX': [{'name': 'Luther Burden III', 'team': 'CHI', 'position': 'WR', 'team_color': '#c83803'}],
-            'K': [{'name': 'Harrison Mevis', 'team': 'LAR', 'position': 'K', 'team_color': '#003594'}]
-        },
-        'color': '#10b981'
     }
 
 # Roster structure requirements
